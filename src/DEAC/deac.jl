@@ -554,7 +554,7 @@ function run_DEAC(Greens_tuple,
         update_populations!(fitness_old, crossover_probability_old, differential_weights_old, population_old, fitness_new, crossover_probability_new, differential_weights_new, population_new)
 
         # do user mutation if applicable
-        if (user_mutation! != nothing)
+        if !isnothing(user_mutation!)
           user_mutation!(population_new, population_old, rng)
           GEMM!(model, Kp, population_new, use_SIMD)
           Χ²!(fitness_new, corr_avg_p, model, W) #./ size(params.input_grid,1)
