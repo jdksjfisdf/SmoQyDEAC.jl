@@ -465,7 +465,7 @@ function run_DEAC(Greens_tuple,
 
   println("Target fitnesses are: ", fitness, "\n")
 
-  if bin_data == nothing
+  if isnothing(bin_data)
     bin_data = zeros(Float64, (size(params.out_ωs, 1), params.num_bins, size(fitness, 1)))
     generations = zeros(UInt64, (params.num_bins, size(fitness, 1)))
     calculated_zeroth_moment = zeros(Float64, (1, params.num_bins, size(fitness, 1)))
