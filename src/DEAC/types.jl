@@ -1,12 +1,12 @@
 # List of allowed kernels
 allowable_kernels = ["time_bosonic",
-                     "time_fermionic",
-                     "time_bosonic_symmetric",
-                     "frequency_fermionic",
-                     "frequency_bosonic",
-                     "frequency_bosonic_symmetric",
-                     "time_bosonic_symmetric_w",
-                    ]
+    "time_fermionic",
+    "time_bosonic_symmetric",
+    "frequency_fermionic",
+    "frequency_bosonic",
+    "frequency_bosonic_symmetric",
+    "time_bosonic_symmetric_w",
+]
 
 
 
@@ -16,11 +16,11 @@ abstract type Comparable end
 
 import Base.==
 
-function ==(a::T, b::T) where T <: Comparable
+function ==(a::T, b::T) where {T<:Comparable}
     f = fieldnames(T)
-    getfield.(Ref(a),f) == getfield.(Ref(b),f)
+    getfield.(Ref(a), f) == getfield.(Ref(b), f)
 end
-                     
+
 
 # DEACParameters
 #
@@ -47,4 +47,4 @@ end
 
 
 # https://stackoverflow.com/questions/51956958/how-to-copy-a-struct-in-julia
-Base.copy(x::DEACParameters) where DEACParameters = DEACParameters([getfield(x, k) for k ∈ fieldnames(DEACParameters)]...)
+Base.copy(x::DEACParameters) where {DEACParameters} = DEACParameters([getfield(x, k) for k ∈ fieldnames(DEACParameters)]...)
