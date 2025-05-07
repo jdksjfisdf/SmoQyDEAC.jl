@@ -91,6 +91,7 @@ function DEAC_Std(correlation_function::AbstractVector,
   keep_bin_data=true,
   find_fitness_floor::Bool=false,
   verbose::Bool=false,
+  prior::Union{Nothing,Vector{Float64}}=nothing,
   (user_mutation!)=nothing
 )
   #
@@ -114,6 +115,7 @@ function DEAC_Std(correlation_function::AbstractVector,
     keep_bin_data,
     find_fitness_floor,
     verbose,
+    prior,
     user_mutation!,
     fitness
   )
@@ -213,6 +215,7 @@ function DEAC_Binned(correlation_function::AbstractMatrix,
   bootstrap_bins::Int=0,
   find_fitness_floor::Bool=false,
   verbose::Bool=false,
+  prior::Union{Nothing,Vector{Float64}}=nothing,
   (user_mutation!)=nothing,
   eigenvalue_ratio_min::Float64=1e-8,
 )
@@ -248,6 +251,7 @@ function DEAC_Binned(correlation_function::AbstractMatrix,
     keep_bin_data,
     find_fitness_floor,
     verbose,
+    prior,
     user_mutation!,
     fitness
     ; bootstrap=do_bootstrap,
@@ -261,6 +265,7 @@ function run_DEAC(Greens_tuple,
   keep_bin_data::Bool,
   find_fitness_floor::Bool,
   verbose::Bool,
+  prior,
   user_mutation!,
   fitness;
   bootstrap=false,
@@ -281,6 +286,7 @@ function run_DEAC(Greens_tuple,
   @assert minimum(fitness) > 0.0 || find_fitness_floor
   @assert params.number_of_generations >= 1
   @assert params.base_seed >= 1
+  @assert isnothing(prior) || length(prior) == size(params.out_ωs, 1) && prod(prior .>= 0)
 
 
   # Declare variables, set defaults, pre-calculations
@@ -374,7 +380,11 @@ function run_DEAC(Greens_tuple,
         rng = Random.Xoshiro(seed)
 
         # Allocate arrays, set random initial state
-        population_old = reshape(Random.rand(rng, size(params.out_ωs, 1) * params.population_size), (size(params.out_ωs, 1), params.population_size))
+        if !isnothing(prior)
+          population_old = stack(prior for pop in 1:params.population_size) .+ reshape(Random.rand(rng, size(params.out_ωs, 1) * params.population_size), (size(params.out_ωs, 1), params.population_size))
+        else
+          population_old = reshape(Random.rand(rng, size(params.out_ωs, 1) * params.population_size), (size(params.out_ωs, 1), params.population_size))
+        end
         population_new = zeros(Float64, (size(params.out_ωs, 1), params.population_size))
         norm_array = zeros(Float64, (1, params.population_size))
 
@@ -505,7 +515,11 @@ function run_DEAC(Greens_tuple,
 
 
       # Randomly set initial populations, initialize arrays
-      population_old = reshape(Random.rand(rng, size(params.out_ωs, 1) * params.population_size), (size(params.out_ωs, 1), params.population_size))
+      if !isnothing(prior)
+        population_old = stack(prior for pop in 1:params.population_size) .+ reshape(Random.rand(rng, size(params.out_ωs, 1) * params.population_size), (size(params.out_ωs, 1), params.population_size))
+      else
+        population_old = reshape(Random.rand(rng, size(params.out_ωs, 1) * params.population_size), (size(params.out_ωs, 1), params.population_size))
+      end
       population_new = zeros(Float64, (size(params.out_ωs, 1), params.population_size))
       norm_array = zeros(Float64, (1, params.population_size))
 
