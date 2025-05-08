@@ -42,3 +42,9 @@ If you found this library to be useful in the course of academic work, please co
 ## Contact us
 
 For questions and comments regarding this package, please email either James Neuhaus at [jneuhau1@utk.edu](mailto:jneuhau1@utk.edu) or Professor Steven Johnston at [sjohn145@utk.edu](mailto:sjohn145@utk.edu).
+
+## Modify Log
+
+I added prior support.
+
+if using a boson kernel other than time_bosonic_symmetric_w, multiply the prior by $\frac{2}{1-\exp(-\beta \omega)}$
