@@ -48,3 +48,5 @@ For questions and comments regarding this package, please email either James Neu
 I added prior support.
 
 if using a boson kernel other than time_bosonic_symmetric_w, multiply the prior by $\frac{2}{1-\exp(-\beta \omega)}$
+
+It does not help at all currently. Avoid using this.
